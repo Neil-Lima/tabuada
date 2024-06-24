@@ -1,18 +1,26 @@
-'use client'
+// src/components/Tabuada.tsx
+
 import React, { useState, ChangeEvent } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup, FormControl, ListGroup } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import {
+  SET_SELECTED_OPERATION,
+  SET_NUMERO,
+  SET_INICIO,
+  SET_FIM,
+  SET_TABUADA_ITEMS,
+  CLEAR_FORM,
+} from '../redux/tabuadaActionTypes';
 
 type TabuadaOperation = '12' | '13' | '14' | '15';
 
-export default function Tabuada() {
-  const [selectedOperation, setSelectedOperation] = useState<TabuadaOperation>('12');
-  const [numero, setNumero] = useState<string>('');
-  const [inicio, setInicio] = useState<string>('');
-  const [fim, setFim] = useState<string>('');
-  const [tabuadaItems, setTabuadaItems] = useState<string[]>([]);
+const Tabuada: React.FC = () => {
+  const dispatch = useDispatch();
+  const { selectedOperation, numero, inicio, fim, tabuadaItems } = useSelector((state: RootState) => state);
 
   const handleOperationChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOperation(event.target.value as TabuadaOperation);
+    dispatch({ type: SET_SELECTED_OPERATION, payload: event.target.value as TabuadaOperation });
   };
 
   const handleCalcular = () => {
@@ -51,14 +59,11 @@ export default function Tabuada() {
       }
     }
 
-    setTabuadaItems(items);
+    dispatch({ type: SET_TABUADA_ITEMS, payload: items });
   };
 
   const handleLimpar = () => {
-    setNumero('');
-    setInicio('');
-    setFim('');
-    setTabuadaItems([]);
+    dispatch({ type: CLEAR_FORM });
   };
 
   return (
@@ -83,7 +88,7 @@ export default function Tabuada() {
             <InputGroup className="mb-3">
               <FormControl
                 value={numero}
-                onChange={(e) => setNumero(e.target.value)}
+                onChange={(e) => dispatch({ type: SET_NUMERO, payload: e.target.value })}
                 placeholder="Digite um Número"
               />
             </InputGroup>
@@ -93,7 +98,7 @@ export default function Tabuada() {
             <InputGroup className="mb-3">
               <FormControl
                 value={inicio}
-                onChange={(e) => setInicio(e.target.value)}
+                onChange={(e) => dispatch({ type: SET_INICIO, payload: e.target.value })}
                 placeholder="Digite onde começar"
               />
             </InputGroup>
@@ -103,7 +108,7 @@ export default function Tabuada() {
             <InputGroup className="mb-3">
               <FormControl
                 value={fim}
-                onChange={(e) => setFim(e.target.value)}
+                onChange={(e) => dispatch({ type: SET_FIM, payload: e.target.value })}
                 placeholder="Digite onde terminar"
               />
             </InputGroup>
@@ -131,4 +136,6 @@ export default function Tabuada() {
       </Container>
     </Container>
   );
-}
+};
+
+export default Tabuada;
