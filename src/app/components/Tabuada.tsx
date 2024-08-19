@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Container, Row, Col, Form, Button, InputGroup, FormControl, ListGroup, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, InputGroup, FormControl, ListGroup, Card, ButtonProps } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { FaSun, FaMoon, FaCalculator, FaEraser } from 'react-icons/fa';
@@ -60,7 +60,11 @@ const StyledCard = styled(Card)<{ theme: CustomTheme }>`
   transition: all 0.3s ease;
 `;
 
-const StyledButton = styled(Button)<{ theme: CustomTheme }>`
+interface StyledButtonProps extends ButtonProps {
+  theme: CustomTheme;
+}
+
+const StyledButton = styled(Button)<StyledButtonProps>`
   background-color: ${props => props.theme.buttonBackground};
   border-color: ${props => props.theme.buttonBorder};
   color: ${props => props.theme.buttonText};
