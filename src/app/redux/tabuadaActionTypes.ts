@@ -1,5 +1,3 @@
-// src/redux/tabuadaActionTypes.ts
-
 export const SET_SELECTED_OPERATION = 'SET_SELECTED_OPERATION';
 export const SET_NUMERO = 'SET_NUMERO';
 export const SET_INICIO = 'SET_INICIO';

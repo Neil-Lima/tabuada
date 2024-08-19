@@ -1,8 +1,6 @@
-// src/redux/tabuadaReducer.ts
-
 import { TabuadaAction, SET_SELECTED_OPERATION, SET_NUMERO, SET_INICIO, SET_FIM, SET_TABUADA_ITEMS, CLEAR_FORM } from './tabuadaActionTypes';
 
-interface TabuadaState {
+export interface TabuadaState {
   selectedOperation: string;
   numero: string;
   inicio: string;

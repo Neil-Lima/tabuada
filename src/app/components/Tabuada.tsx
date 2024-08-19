@@ -1,11 +1,9 @@
-// src/components/Tabuada.tsx
-
 import React, { useState, ChangeEvent } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup, FormControl, ListGroup, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { FaSun, FaMoon, FaCalculator, FaEraser } from 'react-icons/fa';
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
+import styled, { ThemeProvider, createGlobalStyle, DefaultTheme } from 'styled-components';
 import {
   SET_SELECTED_OPERATION,
   SET_NUMERO,
@@ -17,7 +15,17 @@ import {
 
 type TabuadaOperation = '12' | '13' | '14' | '15';
 
-const lightTheme = {
+interface CustomTheme extends DefaultTheme {
+  gradient: string;
+  text: string;
+  cardBackground: string;
+  buttonBackground: string;
+  buttonBorder: string;
+  buttonText: string;
+  buttonHoverBackground: string;
+}
+
+const lightTheme: CustomTheme = {
   gradient: 'linear-gradient(120deg, #f6d365 0%, #fda085 100%)',
   text: '#363537',
   cardBackground: 'rgba(255, 255, 255, 0.9)',
@@ -27,7 +35,7 @@ const lightTheme = {
   buttonHoverBackground: '#0056b3',
 };
 
-const darkTheme = {
+const darkTheme: CustomTheme = {
   gradient: 'linear-gradient(120deg, #20202c 0%, #515175 100%)',
   text: '#FAFAFA',
   cardBackground: 'rgba(42, 43, 45, 0.9)',
@@ -37,7 +45,7 @@ const darkTheme = {
   buttonHoverBackground: '#138496',
 };
 
-const GlobalStyles = createGlobalStyle`
+const GlobalStyles = createGlobalStyle<{ theme: CustomTheme }>`
   body {
     background: ${props => props.theme.gradient};
     color: ${props => props.theme.text};
@@ -46,13 +54,13 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-const StyledCard = styled(Card)`
+const StyledCard = styled(Card)<{ theme: CustomTheme }>`
   background-color: ${props => props.theme.cardBackground};
   color: ${props => props.theme.text};
   transition: all 0.3s ease;
 `;
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Button)<{ theme: CustomTheme }>`
   background-color: ${props => props.theme.buttonBackground};
   border-color: ${props => props.theme.buttonBorder};
   color: ${props => props.theme.buttonText};
@@ -61,7 +69,7 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const ThemeToggle = styled.button`
+const ThemeToggle = styled.button<{ theme: CustomTheme }>`
   position: absolute;
   top: 20px;
   right: 20px;
@@ -75,8 +83,14 @@ const ThemeToggle = styled.button`
 
 const Tabuada: React.FC = () => {
   const dispatch = useDispatch();
-  const { selectedOperation, numero, inicio, fim, tabuadaItems } = useSelector((state: RootState) => state);
-  const [theme, setTheme] = useState('light');
+  const { selectedOperation, numero, inicio, fim, tabuadaItems } = useSelector((state: RootState) => ({
+    selectedOperation: state.selectedOperation,
+    numero: state.numero,
+    inicio: state.inicio,
+    fim: state.fim,
+    tabuadaItems: state.tabuadaItems
+  }));
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
@@ -129,14 +143,16 @@ const Tabuada: React.FC = () => {
     dispatch({ type: CLEAR_FORM });
   };
 
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+
   return (
-    <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
-      <GlobalStyles />
+    <ThemeProvider theme={currentTheme}>
+      <GlobalStyles theme={currentTheme} />
       <Container className="py-5">
-        <StyledCard className="shadow-lg">
+        <StyledCard className="shadow-lg" theme={currentTheme}>
           <Card.Body>
             <div className="position-relative">
-              <ThemeToggle onClick={toggleTheme}>
+              <ThemeToggle onClick={toggleTheme} theme={currentTheme}>
                 {theme === 'light' ? <FaMoon /> : <FaSun />}
               </ThemeToggle>
               <h1 className="text-center mb-4" style={{ color: theme === 'light' ? '#007bff' : '#17a2b8' }}>Tabuada Interativa</h1>
@@ -158,7 +174,7 @@ const Tabuada: React.FC = () => {
 
             <Row className="g-4 mb-4">
               <Col md={4}>
-                <StyledCard className="h-100">
+                <StyledCard className="h-100" theme={currentTheme}>
                   <Card.Body>
                     <h5 className="card-title text-center mb-3">Tabuada</h5>
                     <InputGroup>
@@ -173,7 +189,7 @@ const Tabuada: React.FC = () => {
                 </StyledCard>
               </Col>
               <Col md={4}>
-                <StyledCard className="h-100">
+                <StyledCard className="h-100" theme={currentTheme}>
                   <Card.Body>
                     <h5 className="card-title text-center mb-3">Começa em:</h5>
                     <InputGroup>
@@ -188,7 +204,7 @@ const Tabuada: React.FC = () => {
                 </StyledCard>
               </Col>
               <Col md={4}>
-                <StyledCard className="h-100">
+                <StyledCard className="h-100" theme={currentTheme}>
                   <Card.Body>
                     <h5 className="card-title text-center mb-3">Termina em:</h5>
                     <InputGroup>
@@ -209,6 +225,7 @@ const Tabuada: React.FC = () => {
                 className="btn-lg me-3" 
                 onClick={handleCalcular}
                 style={{ minWidth: '120px' }}
+                theme={currentTheme}
               >
                 <FaCalculator className="me-2" /> Calcular
               </StyledButton>
@@ -216,13 +233,14 @@ const Tabuada: React.FC = () => {
                 className="btn-lg" 
                 onClick={handleLimpar}
                 style={{ minWidth: '120px' }}
+                theme={currentTheme}
               >
                 <FaEraser className="me-2" /> Limpar
               </StyledButton>
             </div>
 
             {tabuadaItems.length > 0 && (
-              <StyledCard className="mt-4">
+              <StyledCard className="mt-4" theme={currentTheme}>
                 <Card.Body>
                   <h5 className="card-title text-center mb-3">Resultados</h5>
                   <ListGroup variant="flush">

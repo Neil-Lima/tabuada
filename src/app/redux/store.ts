@@ -1,7 +1,7 @@
-// src/redux/store.ts
-
 import { createStore } from 'redux';
 import tabuadaReducer from './tabuadaReducer';
+
+export type RootState = ReturnType<typeof tabuadaReducer>;
 
 const store = createStore(tabuadaReducer);
 
