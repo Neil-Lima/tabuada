@@ -1,14 +1,20 @@
 import { useState, ChangeEvent, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
 import { 
-  SET_SELECTED_OPERATION, 
-  SET_NUMERO, 
-  SET_INICIO, 
-  SET_FIM, 
-  SET_TABUADA_ITEMS, 
-  CLEAR_FORM 
-} from '../../../redux/tabuadaActionTypes';
+  RootState,
+  setSelectedOperation,
+  setNumero,
+  setInicio,
+  setFim,
+  setTabuadaItems,
+  clearForm,
+  SET_SELECTED_OPERATION,
+  SET_NUMERO,
+  SET_INICIO,
+  SET_FIM,
+  SET_TABUADA_ITEMS,
+  CLEAR_FORM
+} from '../../../redux';
 import { TabuadaState, TabuadaHandlers, TabuadaOperation } from '../types/TabuadaTypes';
 
 /**
